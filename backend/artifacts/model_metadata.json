@@ -1,0 +1,166 @@
+{
+  "model_version": "recovery-risk-v1",
+  "dataset_version": "v1.0.1",
+  "feature_version": "features-v1",
+  "algorithm": "Pipeline(ColumnTransformer(OneHotEncoder) + HistGradientBoostingClassifier)",
+  "random_seed": 42,
+  "trained_at": "2026-09-05T16:37:33.253021+00:00",
+  "training_rows": 384,
+  "validation_rows": 82,
+  "test_rows": 83,
+  "positive_count": 405,
+  "negative_count": 144,
+  "raw_feature_names": [
+    "amount",
+    "retry_count",
+    "hour_of_day",
+    "day_of_week",
+    "is_weekend",
+    "prior_transaction_count",
+    "prior_success_count",
+    "prior_failure_count",
+    "historical_success_rate",
+    "historical_failure_rate",
+    "average_transaction_amount",
+    "amount_deviation_from_customer_average",
+    "time_since_previous_transaction_hrs",
+    "transactions_last_5min",
+    "transactions_last_1hr",
+    "transactions_last_24hr",
+    "prior_recovery_attempt_count",
+    "prior_recovery_success_count",
+    "prior_recovery_failure_count",
+    "customer_card_success_rate",
+    "customer_upi_success_rate",
+    "customer_netbanking_success_rate",
+    "customer_wallet_success_rate",
+    "customer_tenure_days",
+    "is_opted_out",
+    "has_open_dispute",
+    "payment_method",
+    "failure_type"
+  ],
+  "encoded_feature_names": [
+    "payment_method_CARD",
+    "payment_method_UPI",
+    "payment_method_NETBANKING",
+    "payment_method_WALLET",
+    "failure_type_TEMPORARY_BANK_DECLINE",
+    "failure_type_INSUFFICIENT_FUNDS",
+    "failure_type_BANK_DECLINE",
+    "failure_type_NETWORK_ERROR",
+    "failure_type_EXPIRED_METHOD",
+    "failure_type_INVALID_DETAILS",
+    "amount",
+    "retry_count",
+    "hour_of_day",
+    "day_of_week",
+    "is_weekend",
+    "prior_transaction_count",
+    "prior_success_count",
+    "prior_failure_count",
+    "historical_success_rate",
+    "historical_failure_rate",
+    "average_transaction_amount",
+    "amount_deviation_from_customer_average",
+    "time_since_previous_transaction_hrs",
+    "transactions_last_5min",
+    "transactions_last_1hr",
+    "transactions_last_24hr",
+    "prior_recovery_attempt_count",
+    "prior_recovery_success_count",
+    "prior_recovery_failure_count",
+    "customer_card_success_rate",
+    "customer_upi_success_rate",
+    "customer_netbanking_success_rate",
+    "customer_wallet_success_rate",
+    "customer_tenure_days",
+    "is_opted_out",
+    "has_open_dispute"
+  ],
+  "split_info": {
+    "total": 549,
+    "train": 384,
+    "validation": 82,
+    "test": 83,
+    "train_positives": 280,
+    "train_negatives": 104,
+    "val_positives": 61,
+    "val_negatives": 21,
+    "test_positives": 64,
+    "test_negatives": 19
+  },
+  "metrics": {
+    "positive_prevalence": 0.7711,
+    "pr_baseline_noskill": 0.7711,
+    "brier_baseline_constant": 0.1765,
+    "brier_score": 0.2109,
+    "brier_calibrated_cv3": 0.1743,
+    "roc_auc": 0.6431,
+    "pr_auc": 0.8483,
+    "precision": 0.7925,
+    "recall": 0.6562,
+    "f1": 0.7179,
+    "confusion_matrix": [
+      [
+        8,
+        11
+      ],
+      [
+        22,
+        42
+      ]
+    ],
+    "calibration_behavior": "Calibration is limited by the small synthetic holdout and class prevalence."
+  },
+  "top_features": [
+    {
+      "feature": "failure_type",
+      "importance_mean": 0.1585,
+      "importance_std": 0.0336
+    },
+    {
+      "feature": "average_transaction_amount",
+      "importance_mean": 0.0683,
+      "importance_std": 0.0124
+    },
+    {
+      "feature": "customer_card_success_rate",
+      "importance_mean": 0.0537,
+      "importance_std": 0.006
+    },
+    {
+      "feature": "historical_success_rate",
+      "importance_mean": 0.0268,
+      "importance_std": 0.0142
+    },
+    {
+      "feature": "time_since_previous_transaction_hrs",
+      "importance_mean": 0.0268,
+      "importance_std": 0.0142
+    },
+    {
+      "feature": "payment_method",
+      "importance_mean": 0.0195,
+      "importance_std": 0.0124
+    },
+    {
+      "feature": "historical_failure_rate",
+      "importance_mean": 0.0195,
+      "importance_std": 0.006
+    },
+    {
+      "feature": "hour_of_day",
+      "importance_mean": 0.0171,
+      "importance_std": 0.0124
+    }
+  ],
+  "hyperparameters": {
+    "max_iter": 100,
+    "learning_rate": 0.05,
+    "min_samples_leaf": 15,
+    "max_leaf_nodes": 15,
+    "random_state": 42,
+    "categorical_encoding": "OneHotEncoder(handle_unknown='ignore')"
+  }
+}

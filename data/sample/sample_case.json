@@ -1,0 +1,25 @@
+{
+  "customer": {
+    "external_id": "CUST-DEMO-001",
+    "name": "Arjun Verma",
+    "historical_success_rate": 0.8947,
+    "total_transaction_value": 78500.0,
+    "successful_payment_count": 17,
+    "failed_payment_count": 2,
+    "is_opted_out": false,
+    "has_open_dispute": false
+  },
+  "transaction": {
+    "external_id": "TX-DEMO-001",
+    "amount": 4500.0,
+    "currency": "INR",
+    "payment_method": "CARD",
+    "status": "RECOVERY_ELIGIBLE"
+  },
+  "payment_failure": {
+    "error_code": "BANK_THROTTLED",
+    "error_description": "Gateway connection throttled temporarily by issuer bank",
+    "normalized_failure_type": "TEMPORARY_BANK_DECLINE",
+    "retry_count": 0
+  }
+}

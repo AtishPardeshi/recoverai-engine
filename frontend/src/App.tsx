@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Navbar } from "./components/Navbar";
 import { KPICards } from "./components/KPICards";
+import { RevenueOverview } from "./components/RevenueOverview";
 import { RecoveryFunnel } from "./components/RecoveryFunnel";
+import { RootCauseAndStrategySection } from "./components/RootCauseAndStrategySection";
 import { CaseQueue } from "./components/CaseQueue";
 import { CaseDetailModal } from "./components/CaseDetailModal";
 import { AnalyticsView } from "./components/AnalyticsView";
@@ -39,7 +41,7 @@ export const App: React.FC = () => {
 
   const loadAllData = useCallback(async () => {
     try {
-      const [sum, caseList, act] = await Promise.all([
+      const [sum, caseList, act, an] = await Promise.all([
         api.getDashboardSummary(selectedBatchId || undefined, analyticsScope),
         api.getRecoveryCases({
           status: statusFilter || undefined,
@@ -47,20 +49,17 @@ export const App: React.FC = () => {
           page_size: 50,
         }),
         api.getActivityFeed(30),
+        api.getAnalytics(selectedBatchId || undefined, analyticsScope),
       ]);
       setSummary(sum);
       setCases(caseList);
       setActivityFeed(act);
+      setAnalytics(an);
       setSystemicIncidentActive(sum.systemic_incidents_active > 0);
-
-      if (activeTab === "analytics") {
-        const an = await api.getAnalytics(selectedBatchId || undefined, analyticsScope);
-        setAnalytics(an);
-      }
     } catch (err: any) {
       console.error("Failed to load dashboard data:", err);
     }
-  }, [statusFilter, searchQuery, activeTab, selectedBatchId, analyticsScope]);
+  }, [statusFilter, searchQuery, selectedBatchId, analyticsScope]);
 
   useEffect(() => {
     loadAllData();
@@ -124,10 +123,6 @@ export const App: React.FC = () => {
         `Batch ${summaryResult.batch_id} complete: ${summaryResult.successful_recoveries} recovered of ${summaryResult.total_candidates} candidates! Incremental: ₹${summaryResult.incremental_recovered_revenue.toLocaleString("en-IN")}`
       );
       await loadAllData();
-      if (activeTab === "analytics") {
-        const an = await api.getAnalytics(summaryResult.batch_id, "CURRENT_BATCH");
-        setAnalytics(an);
-      }
     } catch (err: any) {
       showToast("Batch run failed: " + err.message);
     } finally {
@@ -187,7 +182,7 @@ export const App: React.FC = () => {
 
                 <button
                   onClick={() => setSelectedCase(demoCase)}
-                  className="w-full md:w-auto px-6 py-2.5 rounded-xl font-extrabold text-xs text-white bg-emerald-500 hover:bg-emerald-400 text-gray-950 transition-all flex items-center justify-center space-x-2 shadow-lg shadow-emerald-900/40"
+                  className="w-full md:w-auto px-6 py-2.5 rounded-xl font-extrabold text-xs bg-emerald-500 hover:bg-emerald-400 text-gray-950 transition-all flex items-center justify-center space-x-2 shadow-lg shadow-emerald-900/40"
                 >
                   <Zap className="w-4 h-4 text-black fill-black" />
                   <span className="text-black">EXECUTE RECOVERY DEMO</span>
@@ -196,13 +191,25 @@ export const App: React.FC = () => {
               </div>
             )}
 
-            {/* KPI Cards */}
-            <KPICards summary={summary} />
+            {/* SECTION 1: TOP 4 KEY REVENUE METRICS + SCOPE SELECTOR */}
+            <KPICards
+              summary={summary}
+              activeScope={analyticsScope}
+              onScopeChange={(scope) => {
+                setAnalyticsScope(scope);
+              }}
+            />
 
-            {/* Revenue Recovery Funnel */}
+            {/* SECTION 2: REVENUE RECOVERY OVERVIEW (VISUAL WATERFALL / INVARIANT RECONCILIATION) */}
+            <RevenueOverview summary={summary} />
+
+            {/* SECTION 3: AUTONOMOUS RECOVERY PIPELINE */}
             <RecoveryFunnel summary={summary} />
 
-            {/* Two-Column Grid: Live Queue Preview + Activity Feed */}
+            {/* SECTION 4 & 5: ROOT CAUSE INTELLIGENCE & RECOVERY STRATEGY PERFORMANCE */}
+            <RootCauseAndStrategySection analytics={analytics} />
+
+            {/* SECTION 6: RECENT RECOVERY ACTIVITY & ACTIVE QUEUE PREVIEW */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
                 <CaseQueue
@@ -266,8 +273,8 @@ export const App: React.FC = () => {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-gray-900 py-4 px-6 text-center text-xs text-gray-600">
-        RecoverAI • Razorpay Ideathon Track 03 • Autonomous, Bounded Revenue Recovery Loop
+      <footer className="border-t border-gray-900 py-4 px-6 text-center text-xs text-gray-500">
+        RecoverAI • Autonomous, Bounded Revenue Recovery Platform
       </footer>
     </div>
   );

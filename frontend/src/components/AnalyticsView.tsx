@@ -114,7 +114,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
           <div className="text-3xl font-black text-emerald-400">
             {formatCurrency(analytics.incremental_recovered_amount)}
           </div>
-          <p className="text-xs text-emerald-300/80 mt-2">Agent minus Baseline</p>
+          <p className="text-xs text-emerald-300/80 mt-2">Agent Recovered Revenue − Baseline Recovery</p>
         </div>
       </div>
 

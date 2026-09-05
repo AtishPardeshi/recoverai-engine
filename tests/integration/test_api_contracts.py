@@ -29,7 +29,6 @@ def reset_and_seed_db():
         db.close()
     yield
 
-# 1. Dashboard Summary
 def test_1_dashboard_summary():
     resp = client.get("/api/dashboard/summary")
     assert resp.status_code == 200
@@ -53,7 +52,6 @@ def test_1_dashboard_summary():
     assert isinstance(m["total_payment_volume"], (int, float))
     assert 0.0 <= m["recovery_rate"] <= 1.0
 
-# 2. Recovery Case List
 def test_2_recovery_case_list():
     resp = client.get("/api/recovery-cases?page=1&page_size=20")
     assert resp.status_code == 200
@@ -70,7 +68,7 @@ def test_2_recovery_case_list():
     assert "transaction" in first
     assert first["transaction"] is not None
 
-# 3. Recovery Case Detail & TX-DEMO-001 Verification
+
 def test_3_recovery_case_detail_demo():
     # Find demo case
     db = SessionLocal()
@@ -110,7 +108,6 @@ def test_4_recommendation_endpoint():
     assert "ml" in data
     assert 0.0 < data["ml"]["recovery_probability"] <= 1.0
 
-# 5. Recommendation Does NOT Execute Action
 def test_5_recommendation_does_not_execute():
     db = SessionLocal()
     demo_tx = db.query(Transaction).filter(Transaction.external_id == "TX-DEMO-001").first()
@@ -119,11 +116,9 @@ def test_5_recommendation_does_not_execute():
     initial_actions_count = db.query(RecoveryAction).filter(RecoveryAction.recovery_case_id == case_id).count()
     db.close()
 
-    # Call recommend
     resp = client.post(f"/api/recovery-cases/{case_id}/recommend")
     assert resp.status_code == 200
 
-    # Verify state remains unexecuted in DB
     db = SessionLocal()
     case = db.query(RecoveryCase).filter(RecoveryCase.id == case_id).first()
     tx = db.query(Transaction).filter(Transaction.id == case.transaction_id).first()
@@ -134,7 +129,6 @@ def test_5_recommendation_does_not_execute():
     assert tx.status == TransactionStatusEnum.FAILED.value
     assert actions_count == initial_actions_count
 
-# 6. Execute Endpoint
 def test_6_execute_endpoint():
     db = SessionLocal()
     demo_tx = db.query(Transaction).filter(Transaction.external_id == "TX-DEMO-001").first()
@@ -156,9 +150,7 @@ def test_6_execute_endpoint():
     assert data["outcome"]["recovered_amount"] == 12500.0
     assert data["transaction_state"] == "RECOVERED"
 
-# 7. Policy Rejection
 def test_7_policy_rejection():
-    # Create an opted-out customer and case
     db = SessionLocal()
     cust = Customer(
         id=str(uuid.uuid4()),

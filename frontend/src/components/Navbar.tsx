@@ -38,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   Autonomous Agent
                 </span>
               </div>
-              <p className="text-xs text-gray-400">Razorpay Ideathon • Track 03: AI Revenue Recovery</p>
+              <p className="text-xs text-gray-400">Autonomous Revenue Recovery Platform</p>
             </div>
           </div>
 

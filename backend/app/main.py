@@ -30,7 +30,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="Autonomous Revenue Recovery Platform for Razorpay Ideathon Track 3",
+    description="Autonomous Revenue Recovery Platform",
     version="1.0.0",
     lifespan=lifespan,
 )

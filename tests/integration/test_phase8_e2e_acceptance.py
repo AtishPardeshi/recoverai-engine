@@ -26,6 +26,7 @@ from backend.app.services.recovery_service import recovery_service
 
 @pytest.fixture
 def db():
+    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     session = SessionLocal()
     try:
